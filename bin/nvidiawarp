@@ -1,0 +1,40 @@
+#!/usr/bin/env hython
+# -*- coding: utf-8 -*-
+
+import os
+import sys
+
+_ROOT_PATH = os.path.abspath(
+    os.path.join(
+        os.path.dirname(__file__),
+        os.pardir,
+    ),
+)
+_OTLS_PATH = os.path.join(_ROOT_PATH, "houdini", "otls")
+_PYTHON_PATH = os.path.join(_ROOT_PATH, "python")
+
+sys.path.insert(0, _PYTHON_PATH)
+del sys
+del os
+
+# ------------------------------------------------------------------------------
+
+import argparse
+import os
+
+import nvidiawarp
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Build NVIDIA's Warp HDA.",
+    )
+    parser.add_argument(
+        "dest",
+        nargs="?",
+        default=os.path.join(_OTLS_PATH, "nvidia-warp.hda"),
+        help="Destination file where to write the resulting HDA.",
+    )
+
+    args = parser.parse_args()
+    nvidiawarp.build(args.dest)

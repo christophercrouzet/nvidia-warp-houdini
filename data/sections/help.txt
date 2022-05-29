@@ -1,0 +1,117 @@
+= Warp (NVIDIA) =
+
+#type: node
+#context: sop
+
+"""Runs high-performance kernels on the CPU/GPU."""
+
+
+== Overview ==
+
+NVIDIA's Warp is a framework that provides access to running high-performance
+kernels either on the CPU or GPU, all with the convenience of writing the code
+in Python.
+
+See the official reference pages for more information.
+
+Reference ||
+    Link ||
+home page |
+    [https://developer.nvidia.com/warp-python]
+documentation |
+    [https://nvidia.github.io/warp]
+code repository |
+    [https://github.com/NVIDIA/warp]
+
+
+@parameters
+
+Reset:
+    #id: reset
+
+    Resets the state of the simulation.
+
+Start Frame:
+    #id: startframe
+
+    First frame to start solving on.
+
+Substeps:
+    #id: substeps
+
+    Number of simulation steps to divide each frame into.
+
+Device:
+    #id: device
+
+    Device used to allocate the memory and to launch kernels.
+
+Run Over:
+    #id: runover
+
+    Run the kernel either once for each component of the selected class or
+    for the provided number of times.
+
+
+== Attributes ==
+
+Count:
+    #id: attr_count
+
+    Number of geometry attributes to pass to the kernel.
+
+Class:
+    #id: attr_#_type
+
+    What type the geometry attribute belongs to.
+
+Access:
+    #id: attr_#_access
+
+    Type of access required for the geometry attribute.
+
+    Read Only:
+        Pulls the attribute values from the geometry before each step.
+
+    Write Only:
+        Pushes the attribute values onto the geometry after each step.
+
+    Read and Write:
+        Pulls then pushes the geometry attribute values during each step.
+
+Name:
+    #id: attr_#_name
+
+    Name of the geometry attribute to access.
+
+
+== Kernel ==
+
+Source:
+    #id: kernel_source
+
+    Where the code for the kernel is sourced from.
+
+Code:
+    #id: kernel_source_embedded
+
+    Code to use when the kernel source is embedded.
+
+File:
+    #id: kernel_source_file
+
+    Path to use when the kernel source is a file.
+
+
+@examples
+
+:load_example: BouncingBall
+    #examplefile: /examples/nodes/sop/nvidia--warp-0.0.1/BouncingBall.hda
+
+    Simulates a ball bouncing on the floor.
+
+
+:load_example: RippleDeformer
+    #examplefile: /examples/nodes/sop/nvidia--warp-0.0.1/RippleDeformer.hda
+
+    Applies a ripple deformer to a mesh.
