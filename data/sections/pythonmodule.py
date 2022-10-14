@@ -303,10 +303,12 @@ def run(
 """
 
 
-def _load_kernel_module(file_path: str) -> Any:
+def _load_kernel_module(file_path: str, node_id: int) -> Any:
     """Load the Python module containing the Warp kernel."""
-    spec = importlib.util.spec_from_file_location("", file_path)
+    module_name = "nvidia-warp-{}".format(node_id)
+    spec = importlib.util.spec_from_file_location(module_name, file_path)
     module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
     spec.loader.exec_module(module)
     return module
 
@@ -314,6 +316,7 @@ def _load_kernel_module(file_path: str) -> Any:
 def _get_kernel_fn(hda_node: hou.Node) -> Callable:
     """Retrieve the Warp kernel function to run."""
     source = hda_node.parm("kernel_source").evalAsString()
+    node_id = hda_node.sessionId()
     if source == "embedded":
         code = hda_node.evalParm("kernel_source_embedded")
 
@@ -327,7 +330,7 @@ def _get_kernel_fn(hda_node: hou.Node) -> Callable:
                 f.write(code)
 
             # Import the temporary file as a Python module.
-            module = _load_kernel_module(file_path)
+            module = _load_kernel_module(file_path, node_id)
         finally:
             # The resulting Python module is stored in memory so it's safe to
             # clean-up the temporary file now.
@@ -336,7 +339,7 @@ def _get_kernel_fn(hda_node: hou.Node) -> Callable:
         file_path = hda_node.evalParm("kernel_source_file")
 
         # Import the given file as a Python module.
-        module = _load_kernel_module(file_path)
+        module = _load_kernel_module(file_path, node_id)
     else:
         raise RuntimeError("Unrecognized kernel source `{}`.".format(source))
 
