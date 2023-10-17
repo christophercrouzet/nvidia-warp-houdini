@@ -170,7 +170,10 @@ class AttributeDesc(NamedTuple):
             # This should be unreachable.
             assert False
 
-        return array.reshape(-1, self.size)
+        if self.size > 1:
+            return array.reshape(-1, self.size)
+
+        return array
 
     def set_value_array(self, geo: hou.Geometry, array: numpy.array) -> None:
         """Set the attribute values onto the given geometry."""
