@@ -93,8 +93,14 @@ def _create_node(
 def _create_output_node(
     parent: hou.Node,
     input: Tuple[Union[hou.Node, hou.SubnetIndirectInput], int],
+    remove_existing: bool = True,
 ) -> hou.Node:
     """Create an output node and set its flags."""
+    if remove_existing:
+        for child in parent.children():
+            if child.type().name() == "output":
+                child.destroy()
+
     node = _create_node(parent, "output", name="OUT", inputs=(input,))
     node.setGenericFlag(hou.nodeFlag.Display, True)
     node.setGenericFlag(hou.nodeFlag.Render, True)
